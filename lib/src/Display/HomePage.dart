@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:vutha_admin_app/src/Display/Plate/Request/ServiceRequest.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -100,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                 BoxShadow(
                     color: Colors.black12, spreadRadius: 1.5, blurRadius: 1.5)
               ],
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white,
             ),
             child: Center(
               child: Column(
@@ -122,14 +123,16 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          
-          
           Positioned(
-
               top: 25,
               right: 25,
-              child: Text("9+",style: TextStyle(color: Colors.red.withOpacity(0.5),fontSize: 17,fontWeight: FontWeight.bold),))
-          
+              child: Text(
+                "9+",
+                style: TextStyle(
+                    color: Colors.red.withOpacity(0.5),
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold),
+              ))
         ],
       ),
     );
@@ -145,7 +148,7 @@ class _HomePageState extends State<HomePage> {
           boxShadow: [
             BoxShadow(color: Colors.black12, spreadRadius: 1.5, blurRadius: 1.5)
           ],
-          color: Colors.white.withOpacity(0.7),
+          color: Colors.white,
         ),
         child: Center(
           child: Column(
@@ -180,7 +183,7 @@ class _HomePageState extends State<HomePage> {
           boxShadow: [
             BoxShadow(color: Colors.black12, spreadRadius: 1.5, blurRadius: 1.5)
           ],
-          color: Colors.white.withOpacity(0.7),
+          color: Colors.white,
         ),
         child: Center(
           child: Column(
@@ -208,32 +211,42 @@ class _HomePageState extends State<HomePage> {
   _location() {
     return Expanded(
       flex: 1,
-      child: Container(
-        height: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          boxShadow: [
-            BoxShadow(color: Colors.black12, spreadRadius: 1.5, blurRadius: 1.5)
-          ],
-          color: Colors.white.withOpacity(0.7),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(
-                Icons.location_on,
-                color: Colors.orange,
-                size: 100,
-              ),
-              Text(
-                "Location",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w500),
-              ),
+      child: InkWell(
+
+        onTap: (){
+
+
+             Navigator.of(context).push(new MaterialPageRoute(builder: (context)=>ServiceRequest()));
+
+        },
+
+        child: Container(
+          height: 200,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            boxShadow: [
+              BoxShadow(color: Colors.black12, spreadRadius: 1.5, blurRadius: 1.5)
             ],
+            color: Colors.white,
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.location_on,
+                  color: Colors.orange,
+                  size: 100,
+                ),
+                Text(
+                  "Location",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
           ),
         ),
       ),
