@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:vutha_admin_app/src/Display/Plate/Request/ServiceRequest.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -212,20 +211,17 @@ class _HomePageState extends State<HomePage> {
     return Expanded(
       flex: 1,
       child: InkWell(
-
-        onTap: (){
-
-
-             Navigator.of(context).push(new MaterialPageRoute(builder: (context)=>ServiceRequest()));
-
+        onTap: () {
+          Navigator.of(context).push(
+              new MaterialPageRoute(builder: (context) => ServiceRequest()));
         },
-
         child: Container(
           height: 200,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
             boxShadow: [
-              BoxShadow(color: Colors.black12, spreadRadius: 1.5, blurRadius: 1.5)
+              BoxShadow(
+                  color: Colors.black12, spreadRadius: 1.5, blurRadius: 1.5)
             ],
             color: Colors.white,
           ),
