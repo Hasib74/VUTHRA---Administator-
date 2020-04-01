@@ -1,6 +1,6 @@
 import 'package:vutha_admin_app/src/Model/User.dart';
 
-class RequestList {
+ class RequestList {
   List<Request> requestList;
 
   RequestList({this.requestList});
@@ -8,17 +8,17 @@ class RequestList {
 
 class Request {
   var phoneNummbe;
-  Location location;
+  UserLocation userlocation;
   var request_type;
 
   // User user;
 
-  Request({this.location, this.phoneNummbe, this.request_type});
+  Request({this.userlocation, this.phoneNummbe, this.request_type});
 }
 
-class Location {
+class UserLocation {
   var lat;
   var lan;
 
-  Location({this.lat, this.lan});
+  UserLocation({this.lat, this.lan});
 }

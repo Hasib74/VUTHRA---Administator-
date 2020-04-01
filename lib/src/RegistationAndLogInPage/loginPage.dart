@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vutha_admin_app/src/Widget/bezierContainer.dart';
-import 'package:vutha_admin_app/src/loginPage.dart';
+import 'package:vutha_admin_app/src/RegistationAndLogInPage/Widget/bezierContainer.dart';
+import 'package:vutha_admin_app/src/RegistationAndLogInPage/signup.dart';
 
-class SignUpPage extends StatefulWidget {
-  SignUpPage({Key key, this.title}) : super(key: key);
+
+
+class LoginPage extends StatefulWidget {
+  LoginPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _SignUpPageState createState() => _SignUpPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _LoginPageState extends State<LoginPage> {
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -78,13 +79,61 @@ class _SignUpPageState extends State<SignUpPage> {
               end: Alignment.centerRight,
               colors: [Color(0xfffbb448), Color(0xfff7892b)])),
       child: Text(
-        'Register Now',
+        'Login',
         style: TextStyle(fontSize: 20, color: Colors.white),
       ),
     );
   }
 
-  Widget _loginAccountLabel() {
+  Widget _facebookButton() {
+    return Container(
+      height: 50,
+      margin: EdgeInsets.symmetric(vertical: 20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            flex: 1,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color(0xff1959a9),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(5),
+                    topLeft: Radius.circular(5)),
+              ),
+              alignment: Alignment.center,
+              child: Text('f',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w400)),
+            ),
+          ),
+          Expanded(
+            flex: 5,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color(0xff2872ba),
+                borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(5),
+                    topRight: Radius.circular(5)),
+              ),
+              alignment: Alignment.center,
+              child: Text('Log in with Facebook',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _createAccountLabel() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 20),
       alignment: Alignment.bottomCenter,
@@ -92,7 +141,7 @@ class _SignUpPageState extends State<SignUpPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            'Already have an account ?',
+            'Don\'t have an account ?',
             style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
           ),
           SizedBox(
@@ -101,10 +150,10 @@ class _SignUpPageState extends State<SignUpPage> {
           InkWell(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LoginPage()));
+                  MaterialPageRoute(builder: (context) => SignUpPage()));
             },
             child: Text(
-              'Login',
+              'Register',
               style: TextStyle(
                   color: Color(0xfff79c4f),
                   fontSize: 13,
@@ -116,10 +165,16 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  Widget _logo() {
+    return Padding(
+      padding: const EdgeInsets.all(50.0),
+      child: Image(image: AssetImage("Img/logo.jpg")),
+    );
+  }
+
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Username"),
         _entryField("Email id"),
         _entryField("Password", isPassword: true),
       ],
@@ -135,6 +190,10 @@ class _SignUpPageState extends State<SignUpPage> {
           height: MediaQuery.of(context).size.height,
           child: Stack(
             children: <Widget>[
+             /* Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: _logo(),
+              ),*/
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -145,7 +204,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       flex: 3,
                       child: SizedBox(),
                     ),
-                    //_title(),
                     SizedBox(
                       height: 50,
                     ),
@@ -154,22 +212,29 @@ class _SignUpPageState extends State<SignUpPage> {
                       height: 20,
                     ),
                     _submitButton(),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      alignment: Alignment.centerRight,
+                      child: Text('Forgot Password ?',
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w500)),
+                    ),
                     Expanded(
                       flex: 2,
                       child: SizedBox(),
-                    )
+                    ),
                   ],
                 ),
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: _loginAccountLabel(),
+                child: _createAccountLabel(),
               ),
               Positioned(top: 40, left: 0, child: _backButton()),
               Positioned(
                   top: -MediaQuery.of(context).size.height * .15,
                   right: -MediaQuery.of(context).size.width * .4,
-                  child: BezierContainer())
+                  child: BezierContainer()),
             ],
           ),
         )));

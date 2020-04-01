@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vutha_admin_app/src/Display/HomePage.dart';
 
-import 'src/welcomePage.dart';
+import 'src/RegistationAndLogInPage/welcomePage.dart';
 
 void main() => runApp(MyApp());
 
