@@ -24,6 +24,20 @@ class _ServiceRequestState extends State<ServiceRequest> {
 
   var width;
 
+  var serviceMan_name;
+  var serviceMan_lat;
+  var serviceMan_lan;
+  var serviceMan_email;
+  var serviceMan_phoneNumber;
+
+  var userName;
+  var userLat;
+  var userLan;
+  var userNumber;
+  var userEmail;
+
+  bool serviceManWindrow = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -47,28 +61,32 @@ class _ServiceRequestState extends State<ServiceRequest> {
     }
 
     width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      body: StreamBuilder(
-          stream: FirebaseDatabase.instance
-              .reference()
-              .child(Common.HelpRequest)
-              .onValue,
-          builder: (context, snapshot) {
-            //print("Snapshot  ${snapshot.data.snapshot.value}");
+    return SafeArea(
+      child: Scaffold(
+        body: StreamBuilder(
+            stream: FirebaseDatabase.instance
+                .reference()
+                .child(Common.HelpRequest)
+                .onValue,
+            builder: (context, snapshot) {
+              //print("Snapshot  ${snapshot.data.snapshot.value}");
 
-            if (snapshot.data == null) {
-              return Center(child: CircularProgressIndicator());
-            } else {
-              StremOperation(snapshot);
+              if (snapshot.data == null) {
+                return Center(child: CircularProgressIndicator());
+              } else {
+                StremOperation(snapshot);
 
-              return Stack(
-                children: <Widget>[
-                  MapActivity(moveCursor),
-                  SwipeArea(context),
-                ],
-              );
-            }
-          }),
+                return Stack(
+                  children: <Widget>[
+                    MapActivity(
+                        moveCursor, requestToService, removeServiceManDialog),
+                    SwipeArea(context),
+                    this.serviceManWindrow ? serviceManDialog() : Container(),
+                  ],
+                );
+              }
+            }),
+      ),
     );
   }
 
@@ -95,7 +113,11 @@ class _ServiceRequestState extends State<ServiceRequest> {
     requestList = new RequestList(requestList: _requestList);
   }
 
-  Padding MapActivity(void moveCursor(dynamic index)) {
+  Padding MapActivity(
+      void moveCursor(dynamic index),
+      void requestToService(
+          serviceManName, serviceManNumber, serviceManlat, serviceManlan),
+      void removeServiceDialog()) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
       child: MapViewPage(
@@ -103,6 +125,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
         requestList: requestList,
         index: page_position,
         moveCursor: moveCursor,
+        requestToServiceMan: requestToService,
+        removeSericeManDialog: removeServiceDialog,
       ),
     );
   }
@@ -123,6 +147,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
           loop: false,
           autoplay: false,
           onIndexChanged: (index) {
+            removeServiceManDialog();
             setState(() {
               page_position = index;
 
@@ -136,7 +161,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                 height: 200,
                 width: width / 1.2,
                 decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.white.withOpacity(0.6),
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     boxShadow: [
                       BoxShadow(
@@ -198,7 +223,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                     if (data.data == null) {
                                       return Container();
                                     } else {
-                                      return Text(data.data);
+                                      return Text("Address : ${data.data} ");
                                     }
                                   })
                             ],
@@ -218,6 +243,155 @@ class _ServiceRequestState extends State<ServiceRequest> {
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
 
-    return '${first.addressLine} , ${first.subLocality}  ';
+    return '${first.addressLine}   ';
+  }
+
+  serviceManDialog() {
+    return Positioned(
+      top: 20,
+      right: 0.0,
+      child: Stack(
+        children: <Widget>[
+          Container(
+            width: MediaQuery.of(context).size.width / 1.3,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.7),
+              boxShadow: [
+                BoxShadow(color: Colors.black12, spreadRadius: 1, blurRadius: 1)
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text("Name : ${serviceMan_name}"),
+                  Padding(padding: EdgeInsets.all(4)),
+                  Text("Number : ${serviceMan_phoneNumber}"),
+                  Padding(padding: EdgeInsets.all(4)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text("Location :"),
+                      FutureBuilder(
+                          future:
+                              getUserLocation(serviceMan_lat, serviceMan_lan),
+                          builder: (context, data) {
+                            if (data.data == null) {
+                              return Container();
+                            } else {
+                              return Flexible(
+                                  child: Text(
+                                " ${data.data} ",
+                                softWrap: true,
+                              ));
+                            }
+                          }),
+                    ],
+                  ),
+                  Padding(padding: EdgeInsets.all(4)),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: (){
+
+                        _serveRequest();
+
+                      },
+
+                      child: Container(
+                        height: 30,
+                        decoration: BoxDecoration(
+                            color: Colors.orange,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black12,
+                                  spreadRadius: 1,
+                                  blurRadius: 1)
+                            ]),
+                        child: Center(
+                          child: Text(
+                            "   Requested To Serve   ",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.all(0)),
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+              top: 5,
+              right: 5,
+              child: InkWell(
+                  onTap: () {
+                    removeServiceManDialog();
+                  },
+                  child: new Icon(Icons.close)))
+        ],
+      ),
+    );
+  }
+
+  requestToService(serviceManName, serviceManNumber, serviceManLat,
+      serviceManLan /*, userName, userNumber, userLat, userLan, userGmail*/) {
+    print("I am clicked");
+
+    setState(() {
+      serviceMan_name = serviceManName;
+      serviceMan_phoneNumber = serviceManNumber;
+
+      serviceMan_lan = serviceManLan;
+
+      serviceMan_lat = serviceManLat;
+
+      serviceMan_email = serviceMan_email;
+
+
+
+      serviceManWindrow = true;
+    });
+  }
+
+  void removeServiceManDialog() {
+    setState(() {
+      this.serviceManWindrow = false;
+    });
+  }
+
+  void _serveRequest() {
+
+
+    FirebaseDatabase.instance.reference().child(Common.Serve).child(this.serviceMan_phoneNumber).push().set({
+
+
+      "userNumber" : this.requestList.requestList[this.page_position].phoneNummbe,
+      "requestType" : this.requestList.requestList[this.page_position].request_type,
+      "lat" : this.requestList.requestList[this.page_position].userlocation.lat,
+      "lan" : this.requestList.requestList[this.page_position].userlocation.lan,
+
+
+
+    }).then((value){
+
+
+
+      FirebaseDatabase.instance.reference().child(Common.HelpRequest).child(this.requestList.requestList[this.page_position].phoneNummbe).remove().then((value) {
+
+
+        removeServiceManDialog();
+
+      });
+
+
+    });
+
   }
 }

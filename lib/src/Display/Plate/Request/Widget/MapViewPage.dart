@@ -15,8 +15,18 @@ class MapViewPage extends StatefulWidget {
 
   Function moveCursor;
 
+  Function requestToServiceMan;
+
+  Function removeSericeManDialog;
+
   MapViewPage(
-      {this.request, this.requestList, this.index, this.moveCursor, Key key})
+      {this.request,
+      this.requestList,
+      this.index,
+      this.moveCursor,
+      this.removeSericeManDialog,
+      this.requestToServiceMan,
+      Key key})
       : super(key: key);
 
   @override
@@ -59,10 +69,16 @@ class _MapViewPageState extends State<MapViewPage> {
 
           setState(() {
             _home_assist_markers.add(new Marker(
-                consumeTapEvents: true,
-                infoWindow: InfoWindow(
-                  title: value[i].Number,
-                ),
+                //  consumeTapEvents: true,
+
+                onTap: () {
+                  widget.requestToServiceMan(
+                    value[i].Name,
+                    value[i].Number,
+                    value[i].serviceManLocation.lat,
+                    value[i].serviceManLocation.lan,
+                  );
+                },
                 markerId: MarkerId("ha${i}"),
                 icon: BitmapDescriptor.defaultMarkerWithHue(
                     BitmapDescriptor.hueYellow),
@@ -73,9 +89,14 @@ class _MapViewPageState extends State<MapViewPage> {
           setState(() {
             _security_markers.add(new Marker(
                 consumeTapEvents: true,
-                infoWindow: InfoWindow(
-                  title: value[i].Number,
-                ),
+                onTap: () {
+                  widget.requestToServiceMan(
+                    value[i].Name,
+                    value[i].Number,
+                    value[i].serviceManLocation.lat,
+                    value[i].serviceManLocation.lan,
+                  );
+                },
                 markerId: MarkerId("s${i}"),
                 icon: BitmapDescriptor.defaultMarkerWithHue(
                     BitmapDescriptor.hueYellow),
@@ -84,6 +105,14 @@ class _MapViewPageState extends State<MapViewPage> {
           });
         } else if (value[i].ServiceType == "Ambulance") {
           _ambulance_markers.add(new Marker(
+              onTap: () {
+                widget.requestToServiceMan(
+                  value[i].Name,
+                  value[i].Number,
+                  value[i].serviceManLocation.lat,
+                  value[i].serviceManLocation.lan,
+                );
+              },
               consumeTapEvents: true,
               markerId: MarkerId("amb${i}"),
               icon: BitmapDescriptor.defaultMarkerWithHue(
@@ -99,10 +128,6 @@ class _MapViewPageState extends State<MapViewPage> {
               position: new LatLng(value[i].serviceManLocation.lat,
                   value[i].serviceManLocation.lan)));
         }
-
-        // });
-
-        ///////////////////////////load
 
         if (widget.requestList.requestList[widget.index].request_type
             .toString()
@@ -243,10 +268,6 @@ class _MapViewPageState extends State<MapViewPage> {
               });
             },
             markerId: MarkerId(i.toString()),
-            infoWindow: InfoWindow(
-                title:
-                    "Waiting For ${widget.requestList.requestList[i].request_type}",
-                snippet: "${widget.requestList.requestList[i].phoneNummbe}"),
             position: new LatLng(
                 widget.requestList.requestList[i].userlocation.lat,
                 widget.requestList.requestList[i].userlocation.lan)));
@@ -262,10 +283,6 @@ class _MapViewPageState extends State<MapViewPage> {
             },
             markerId: MarkerId(i.toString()),
             icon: BitmapDescriptor.defaultMarkerWithHue(17),
-            infoWindow: InfoWindow(
-                title:
-                    "Waiting For ${widget.requestList.requestList[i].request_type}",
-                snippet: "${widget.requestList.requestList[i].phoneNummbe}"),
             position: new LatLng(
                 widget.requestList.requestList[i].userlocation.lat,
                 widget.requestList.requestList[i].userlocation.lan)));
@@ -302,18 +319,6 @@ class _MapViewPageState extends State<MapViewPage> {
         tilt: 0.0,
         bearing: 0.0 // 2
         );
-
-    /* BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(devicePixelRatio: 2.5), 'Img/marker.png')
-        .then((onValue) {
-      pinLocationIcon = onValue;
-    });*/
-
-    /*_markers.add(new Marker(
-      markerId: MarkerId("1"),
-      position: new LatLng(
-          widget.request.userlocation.lat, widget.request.userlocation.lan),
-    ));*/
 
     return Scaffold(
       body: Stack(
@@ -369,6 +374,7 @@ class _MapViewPageState extends State<MapViewPage> {
         print("Value  ${value}");
 
         _list_service_man.add(new ServiceMan(
+            Name: value["Name"],
             Email: value["Email"],
             Number: key,
             ServiceType: value["ServiceType"],

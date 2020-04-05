@@ -4,4 +4,6 @@ class Common{
 
   static var User= "User";
 
+  static var Serve ="Serve";
+
 }
