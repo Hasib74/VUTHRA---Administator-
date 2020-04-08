@@ -96,16 +96,17 @@ class _ServiceRequestState extends State<ServiceRequest> {
     List<Request> _requestList = [];
 
     _help_request.forEach((key, value) {
-      print("Key   ${key}");
+      //print("Key   ${key}");
+       //print("Valuee ${value}");
 
-      print("Valuee ${value}");
-
-      _requestList.add(new Request(
-        phoneNummbe: key,
-        request_type: value["request_type"],
-        userlocation: new UserLocation(
-            lat: value["location"]["lat"], lan: value["location"]["lan"]),
-      ));
+      if (value["serviceBelongsto"] == null ) {
+        _requestList.add(new Request(
+          phoneNummbe: key,
+          request_type: value["request_type"],
+          userlocation: new UserLocation(
+              lat: value["location"]["lat"], lan: value["location"]["lan"]),
+        ));
+      }
 
       // RequestList(requestList: )
     });
@@ -294,12 +295,9 @@ class _ServiceRequestState extends State<ServiceRequest> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
-                      onTap: (){
-
+                      onTap: () {
                         _serveRequest();
-
                       },
-
                       child: Container(
                         height: 30,
                         decoration: BoxDecoration(
@@ -354,8 +352,6 @@ class _ServiceRequestState extends State<ServiceRequest> {
 
       serviceMan_email = serviceMan_email;
 
-
-
       serviceManWindrow = true;
     });
   }
@@ -367,31 +363,28 @@ class _ServiceRequestState extends State<ServiceRequest> {
   }
 
   void _serveRequest() {
-
-
-    FirebaseDatabase.instance.reference().child(Common.Serve).child(this.serviceMan_phoneNumber).push().set({
-
-
-      "userNumber" : this.requestList.requestList[this.page_position].phoneNummbe,
-      "requestType" : this.requestList.requestList[this.page_position].request_type,
-      "lat" : this.requestList.requestList[this.page_position].userlocation.lat,
-      "lan" : this.requestList.requestList[this.page_position].userlocation.lan,
-
-
-
-    }).then((value){
-
-
-
-      FirebaseDatabase.instance.reference().child(Common.HelpRequest).child(this.requestList.requestList[this.page_position].phoneNummbe).remove().then((value) {
-
-
-        removeServiceManDialog();
-
+    FirebaseDatabase.instance
+        .reference()
+        .child(Common.Serve)
+        .child(this.serviceMan_phoneNumber)
+        .push()
+        .set({
+      "userNumber":
+          this.requestList.requestList[this.page_position].phoneNummbe,
+      "requestType":
+          this.requestList.requestList[this.page_position].request_type,
+      "lat": this.requestList.requestList[this.page_position].userlocation.lat,
+      "lan": this.requestList.requestList[this.page_position].userlocation.lan,
+    }).then((value) {
+      FirebaseDatabase.instance
+          .reference()
+          .child(Common.HelpRequest)
+          .child(this.requestList.requestList[this.page_position].phoneNummbe)
+          .set({
+        "serviceBelongsto": this.serviceMan_phoneNumber,
       });
 
-
+      removeServiceManDialog();
     });
-
   }
 }
