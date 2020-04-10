@@ -54,9 +54,10 @@ class _ServiceRequestState extends State<ServiceRequest> {
       //print("Super Index  I   ${index}");
 
       setState(() {
-        page_position = index;
+        page_position = requestList.requestList[index] == null ? 0 : index;
 
-        swiperController.move(index, animation: true);
+        swiperController
+            .move(requestList.requestList[index] == null ? 0 : index);
       });
     }
 
@@ -71,15 +72,22 @@ class _ServiceRequestState extends State<ServiceRequest> {
             builder: (context, snapshot) {
               //print("Snapshot  ${snapshot.data.snapshot.value}");
 
-              if (snapshot.data == null) {
+              if (snapshot.data == null ||
+                  snapshot.data.snapshot.value == null) {
                 return Center(child: CircularProgressIndicator());
               } else {
-                StremOperation(snapshot);
+                //  requestList.requestList.clear();
+
+                RequestList requestList;
+
+                //  requestList.requestList.clear();
+
+                requestList = StremOperation(snapshot);
 
                 return Stack(
                   children: <Widget>[
-                    MapActivity(
-                        moveCursor, requestToService, removeServiceManDialog),
+                    MapActivity(moveCursor, requestToService,
+                        removeServiceManDialog, requestList),
                     SwipeArea(context),
                     this.serviceManWindrow ? serviceManDialog() : Container(),
                   ],
@@ -90,16 +98,16 @@ class _ServiceRequestState extends State<ServiceRequest> {
     );
   }
 
-  void StremOperation(AsyncSnapshot snapshot) {
+  RequestList StremOperation(AsyncSnapshot snapshot) {
     Map<dynamic, dynamic> _help_request = snapshot.data.snapshot.value;
 
     List<Request> _requestList = [];
 
     _help_request.forEach((key, value) {
       //print("Key   ${key}");
-       //print("Valuee ${value}");
+      //print("Valuee ${value}");
 
-      if (value["serviceBelongsto"] == null ) {
+      if (value["serviceBelongsto"] == null) {
         _requestList.add(new Request(
           phoneNummbe: key,
           request_type: value["request_type"],
@@ -111,25 +119,50 @@ class _ServiceRequestState extends State<ServiceRequest> {
       // RequestList(requestList: )
     });
 
-    requestList = new RequestList(requestList: _requestList);
+    // requestList.requestList.clear();
+
+    return requestList = new RequestList(requestList: _requestList);
   }
 
   Padding MapActivity(
       void moveCursor(dynamic index),
       void requestToService(
           serviceManName, serviceManNumber, serviceManlat, serviceManlan),
-      void removeServiceDialog()) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0),
-      child: MapViewPage(
-        request: requestList.requestList[page_position],
-        requestList: requestList,
-        index: page_position,
-        moveCursor: moveCursor,
-        requestToServiceMan: requestToService,
-        removeSericeManDialog: removeServiceDialog,
-      ),
-    );
+      void removeServiceDialog(),
+      RequestList requestList) {
+
+
+    try {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: Container(
+          child: MapViewPage(
+            request: requestList.requestList[page_position],
+            requestList: requestList,
+            index: page_position,
+            moveCursor: moveCursor,
+            requestToServiceMan: requestToService,
+            removeSericeManDialog: removeServiceDialog,
+          ),
+        ),
+      );
+    } catch (exp) {
+      print("EXP   ${exp}");
+
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: Container(
+          child: MapViewPage(
+            request: requestList.requestList[page_position - 1],
+            requestList: requestList,
+            index: page_position - 1,
+            moveCursor: moveCursor,
+            requestToServiceMan: requestToService,
+            removeSericeManDialog: removeServiceDialog,
+          ),
+        ),
+      );
+    }
   }
 
   Positioned SwipeArea(BuildContext context) {
@@ -151,13 +184,9 @@ class _ServiceRequestState extends State<ServiceRequest> {
             removeServiceManDialog();
             setState(() {
               page_position = index;
-
-              print("position ${page_position}");
             });
           },
           itemBuilder: (context, int index) {
-            print("length  ${requestList.requestList.length}");
-
             return Container(
                 height: 200,
                 width: width / 1.2,
