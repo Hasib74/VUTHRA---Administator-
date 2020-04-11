@@ -130,8 +130,6 @@ class _ServiceRequestState extends State<ServiceRequest> {
           serviceManName, serviceManNumber, serviceManlat, serviceManlan),
       void removeServiceDialog(),
       RequestList requestList) {
-
-
     try {
       return Padding(
         padding: const EdgeInsets.only(bottom: 10.0),

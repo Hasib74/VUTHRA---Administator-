@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vutha_admin_app/src/Display/Plate/Chat/ChatList.dart';
 import 'package:vutha_admin_app/src/Display/Plate/Request/ServiceRequest.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -82,8 +83,14 @@ class _HomePageState extends State<HomePage> {
                   _location(),
                 ],
               ),
-            )
+            ),
+
+
+            _chat(),
           ],
+
+
+
         ));
   }
 
@@ -247,6 +254,51 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  _chat(){
+
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+            new MaterialPageRoute(builder: (context) => ChatList()));
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left:12.0,right: 12.0),
+        child: Container(
+          height: 200,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black12, spreadRadius: 1.5, blurRadius: 1.5)
+            ],
+            color: Colors.white,
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.chat_bubble,
+                  color: Colors.orange,
+                  size: 100,
+                ),
+                Text(
+                  "Chat",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
   }
 }
 

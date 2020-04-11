@@ -6,4 +6,8 @@ class Common{
 
   static var Serve ="Serve";
 
+  static var Chat = "Chat";
+
+
+
 }
