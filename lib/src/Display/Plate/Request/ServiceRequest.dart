@@ -72,8 +72,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
             builder: (context, snapshot) {
               //print("Snapshot  ${snapshot.data.snapshot.value}");
 
-              if (snapshot.data == null ||
-                  snapshot.data.snapshot.value == null) {
+              if (snapshot.data == null || snapshot.data.snapshot.value == null) {
                 return Center(child: CircularProgressIndicator());
               } else {
                 //  requestList.requestList.clear();
@@ -84,13 +83,19 @@ class _ServiceRequestState extends State<ServiceRequest> {
 
                 requestList = StremOperation(snapshot);
 
-                return Stack(
+                return requestList.requestList.length !=0 ? Stack(
                   children: <Widget>[
                     MapActivity(moveCursor, requestToService,
                         removeServiceManDialog, requestList),
                     SwipeArea(context),
                     this.serviceManWindrow ? serviceManDialog() : Container(),
                   ],
+                ):Container(
+                  child: Center(
+
+                    child: Text("No Request Avilable !!!",style: TextStyle(color: Colors.orange,fontWeight: FontWeight.w800),),
+
+                  ),
                 );
               }
             }),
@@ -402,6 +407,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
           this.requestList.requestList[this.page_position].request_type,
       "lat": this.requestList.requestList[this.page_position].userlocation.lat,
       "lan": this.requestList.requestList[this.page_position].userlocation.lan,
+      "serviceManLat" : this.serviceMan_lat,
+      "serviceManLan" : this.serviceMan_lan,
     }).then((value) {
       FirebaseDatabase.instance
           .reference()

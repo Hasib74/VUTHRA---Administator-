@@ -4,8 +4,6 @@ import 'package:vutha_admin_app/src/Display/HomePage.dart';
 
 import 'src/RegistationAndLogInPage/welcomePage.dart';
 
-
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -16,10 +14,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-         primarySwatch: Colors.blue,
-         textTheme:GoogleFonts.latoTextTheme(textTheme).copyWith(
-           body1: GoogleFonts.montserrat(textStyle: textTheme.body1),
-         ),
+        primarySwatch: Colors.blue,
+        textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
+          body1: GoogleFonts.montserrat(textStyle: textTheme.body1),
+        ),
       ),
       debugShowCheckedModeBanner: false,
       home: HomePage(),

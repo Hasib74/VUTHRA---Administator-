@@ -44,28 +44,24 @@ class ChatList extends StatelessWidget {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: InkWell(
-                              onTap: (){
-                                Navigator.of(context).push(new MaterialPageRoute(builder: (context)=>Chat(number: chat.data[index].number,)));
+                              onTap: () {
+                                Navigator.of(context)
+                                    .push(new MaterialPageRoute(
+                                        builder: (context) => Chat(
+                                              number: chat.data[index].number,
+                                            )));
                               },
-
                               child: Container(
-
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.all(Radius.circular(10)),
-
-                                  boxShadow: [
-                                    BoxShadow(
-
-                                      color: Colors.black12,
-                                      spreadRadius: 1,
-                                      blurRadius: 1
-                                    )
-
-                                  ]
-
-                                ),
-
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black12,
+                                          spreadRadius: 1,
+                                          blurRadius: 1)
+                                    ]),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -74,12 +70,26 @@ class ChatList extends StatelessWidget {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
                                         "${chat.data[index].name}",
-                                        style: TextStyle(color: Colors.orangeAccent,fontWeight: FontWeight.w800),
+                                        style: TextStyle(
+                                            color: Colors.orangeAccent,
+                                            fontWeight: FontWeight.w800),
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(top:2.0,left: 8,bottom: 8,right: 8),
-                                      child: Text("${chat.data[index].message}" ,style: TextStyle(color: chat.data[index].message=="New conncetion" ? Colors.black54 :Colors.black ,fontWeight: FontWeight.w300),),
+                                      padding: const EdgeInsets.only(
+                                          top: 2.0,
+                                          left: 8,
+                                          bottom: 8,
+                                          right: 8),
+                                      child: Text(
+                                        "${chat.data[index].message}",
+                                        style: TextStyle(
+                                            color: chat.data[index].message ==
+                                                    "New conncetion"
+                                                ? Colors.black54
+                                                : Colors.black,
+                                            fontWeight: FontWeight.w300),
+                                      ),
                                     ),
                                   ],
                                 ),

@@ -33,6 +33,9 @@ dependencies:
   geocoder: ^0.2.1
   flutter_polyline_points: ^0.1.0
   firebase: ^5.0.0
+  firebase_messaging: ^6.0.13
+  flutter_local_notifications: ^1.4.1
+  rxdart: ^0.24.0
 
 
 dev_dependencies:
