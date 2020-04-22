@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vutha_admin_app/src/RegistationAndLogInPage/loginPage.dart';
-import 'package:vutha_admin_app/src/RegistationAndLogInPage/signup.dart';
+
+import 'package:vutha_admin_app/src/View/RegistationAndLogInPage/loginPage.dart';
+import 'package:vutha_admin_app/src/View/RegistationAndLogInPage/signup.dart';
 
 class WelcomePage extends StatefulWidget {
   WelcomePage({Key key, this.title}) : super(key: key);

@@ -2,11 +2,14 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:vutha_admin_app/src/Display/Plate/Request/Widget/MapViewPage.dart';
+import 'package:vutha_admin_app/src/View/Map/MapViewPage.dart';
 import 'package:vutha_admin_app/src/Model/Request.dart';
 import 'package:vutha_admin_app/src/Utils/Common.dart';
 
 import 'package:geocoder/geocoder.dart';
+
+
+import 'package:vutha_admin_app/src/Controller/NotificationController/NotificationController.dart' as notification_controller;
 
 class ServiceRequest extends StatefulWidget {
   @override
@@ -72,8 +75,18 @@ class _ServiceRequestState extends State<ServiceRequest> {
             builder: (context, snapshot) {
               //print("Snapshot  ${snapshot.data.snapshot.value}");
 
-              if (snapshot.data == null || snapshot.data.snapshot.value == null) {
-                return Center(child: CircularProgressIndicator());
+              if (snapshot.data == null ||
+                  snapshot.data.snapshot.value == null) {
+                return Container(
+                  child: Center(
+                    child: Text(
+                      "No Request Avilable !!!",
+                      style: TextStyle(
+                          color: Colors.orange,
+                          fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                );
               } else {
                 //  requestList.requestList.clear();
 
@@ -83,20 +96,27 @@ class _ServiceRequestState extends State<ServiceRequest> {
 
                 requestList = StremOperation(snapshot);
 
-                return requestList.requestList.length !=0 ? Stack(
-                  children: <Widget>[
-                    MapActivity(moveCursor, requestToService,
-                        removeServiceManDialog, requestList),
-                    SwipeArea(context),
-                    this.serviceManWindrow ? serviceManDialog() : Container(),
-                  ],
-                ):Container(
-                  child: Center(
-
-                    child: Text("No Request Avilable !!!",style: TextStyle(color: Colors.orange,fontWeight: FontWeight.w800),),
-
-                  ),
-                );
+                return requestList.requestList.length != 0
+                    ? Stack(
+                        children: <Widget>[
+                          MapActivity(moveCursor, requestToService,
+                              removeServiceManDialog, requestList),
+                          SwipeArea(context),
+                          this.serviceManWindrow
+                              ? serviceManDialog()
+                              : Container(),
+                        ],
+                      )
+                    : Container(
+                        child: Center(
+                          child: Text(
+                            "No Request Avilable !!!",
+                            style: TextStyle(
+                                color: Colors.orange,
+                                fontWeight: FontWeight.w800),
+                          ),
+                        ),
+                      );
               }
             }),
       ),
@@ -191,7 +211,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
           },
           itemBuilder: (context, int index) {
             return Container(
-                height: 200,
+
                 width: width / 1.2,
                 decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.6),
@@ -256,7 +276,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                     if (data.data == null) {
                                       return Container();
                                     } else {
-                                      return Text("Address : ${data.data} ");
+                                      return Flexible(child:  Text("Address : ${data.data} ")
+                                        ,);
                                     }
                                   })
                             ],
@@ -395,6 +416,15 @@ class _ServiceRequestState extends State<ServiceRequest> {
   }
 
   void _serveRequest() {
+
+
+    print("User Number iss   ${this.requestList.requestList[this.page_position].phoneNummbe}");
+
+    notification_controller.sendNotificationToServiceMan("New request from admin", this.serviceMan_phoneNumber);
+    notification_controller.sendNotificationToUser("Service Accepted", this.requestList.requestList[this.page_position].phoneNummbe);
+
+
+
     FirebaseDatabase.instance
         .reference()
         .child(Common.Serve)
@@ -407,8 +437,8 @@ class _ServiceRequestState extends State<ServiceRequest> {
           this.requestList.requestList[this.page_position].request_type,
       "lat": this.requestList.requestList[this.page_position].userlocation.lat,
       "lan": this.requestList.requestList[this.page_position].userlocation.lan,
-      "serviceManLat" : this.serviceMan_lat,
-      "serviceManLan" : this.serviceMan_lan,
+      "serviceManLat": this.serviceMan_lat,
+      "serviceManLan": this.serviceMan_lan,
     }).then((value) {
       FirebaseDatabase.instance
           .reference()
@@ -417,6 +447,10 @@ class _ServiceRequestState extends State<ServiceRequest> {
           .set({
         "serviceBelongsto": this.serviceMan_phoneNumber,
       });
+
+
+
+
 
       removeServiceManDialog();
     });

@@ -36,6 +36,7 @@ dependencies:
   firebase_messaging: ^6.0.13
   flutter_local_notifications: ^1.4.1
   rxdart: ^0.24.0
+  mvc_pattern: ^4.0.0
 
 
 dev_dependencies:
