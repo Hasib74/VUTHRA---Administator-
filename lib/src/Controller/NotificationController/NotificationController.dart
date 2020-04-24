@@ -28,9 +28,7 @@ void registerNotification() {
   firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
     print('onMessage: $message');
 
-    if (message["data"]["type"].toString().endsWith("send request") ||
-        message["data"]["type"].toString().endsWith("confirm") ||
-        message["data"]["type"].toString().endsWith("cancle")) {
+    if (message["data"]["type"].toString().endsWith("admin") ) {
       showNotification(message['data']);
     }
 
@@ -40,9 +38,7 @@ void registerNotification() {
   }, onResume: (Map<String, dynamic> message) {
     print('onResume: $message');
 
-    if (message["data"]["type"].toString().endsWith("send request") ||
-        message["data"]["type"].toString().endsWith("confirm") ||
-        message["data"]["type"].toString().endsWith("cancle")) {
+    if (message["data"]["type"].toString().endsWith("admin") ) {
       showNotification(message['data']);
     }
 
@@ -52,9 +48,7 @@ void registerNotification() {
   }, onLaunch: (Map<String, dynamic> message) {
     print('onLaunch: $message');
 
-    if (message["data"]["type"].toString().endsWith("send request") ||
-        message["data"]["type"].toString().endsWith("confirm") ||
-        message["data"]["type"].toString().endsWith("cancle")) {
+    if (message["data"]["type"].toString().endsWith("admin")) {
       showNotification(message['data']);
     }
 
@@ -167,7 +161,7 @@ void sendNotificationToServiceMan(body, number) {
       .then((value) {
     NotificationData notificationData = new NotificationData(
         data: Data(
-            type: "service belongs to service man",
+            type: "serviceman",
             body: "${body}",
             title: "New Request",
             click_action: "newRequest"),

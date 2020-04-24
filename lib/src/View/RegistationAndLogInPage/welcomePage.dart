@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:vutha_admin_app/src/View/RegistationAndLogInPage/loginPage.dart';
 import 'package:vutha_admin_app/src/View/RegistationAndLogInPage/signup.dart';

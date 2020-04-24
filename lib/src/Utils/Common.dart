@@ -1,3 +1,5 @@
+import 'package:geocoder/geocoder.dart';
+
 class Common{
 
   static var  HelpRequest ="HelpRequest";
@@ -13,5 +15,13 @@ class Common{
   static var TOKEN= "Token";
 
 
+  static Future<String> getUserLocation(lat, lan) async {
+    final coordinates = new Coordinates(lat, lan);
+    var addresses =
+    await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+
+    return '${first.addressLine}   ';
+  }
 
 }

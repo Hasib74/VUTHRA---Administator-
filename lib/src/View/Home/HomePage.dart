@@ -96,36 +96,38 @@ class _HomePageState extends State<HomePage> {
   _cards() {
     return Align(
         alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                children: <Widget>[
-                  _profile(),
-                  SizedBox(
-                    width: 14,
-                  ),
-                  _new_user(),
-                ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  children: <Widget>[
+                    _profile(),
+                    SizedBox(
+                      width: 14,
+                    ),
+                    _new_user(),
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                children: <Widget>[
-                  _payment(),
-                  SizedBox(
-                    width: 14,
-                  ),
-                  _location(),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  children: <Widget>[
+                    _payment(),
+                    SizedBox(
+                      width: 14,
+                    ),
+                    _location(),
+                  ],
+                ),
               ),
-            ),
-            _chat(),
-          ],
+              _chat(),
+            ],
+          ),
         ));
   }
 

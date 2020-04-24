@@ -120,14 +120,16 @@ class _MapViewPageState extends State<MapViewPage> {
                   BitmapDescriptor.hueYellow),
               position: new LatLng(value[i].serviceManLocation.lat,
                   value[i].serviceManLocation.lan)));
-        } else {
-          _rode_side_markers.add(new Marker(
-              consumeTapEvents: true,
-              markerId: MarkerId("rs${i}"),
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueYellow),
-              position: new LatLng(value[i].serviceManLocation.lat,
-                  value[i].serviceManLocation.lan)));
+        } else if (value[i].ServiceType == "Rode Side") {
+          setState(() {
+            _rode_side_markers.add(new Marker(
+                consumeTapEvents: true,
+                markerId: MarkerId("rs${i}"),
+                icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueYellow),
+                position: new LatLng(value[i].serviceManLocation.lat,
+                    value[i].serviceManLocation.lan)));
+          });
         }
 
         if (widget.requestList.requestList[widget.index].request_type
@@ -237,9 +239,14 @@ class _MapViewPageState extends State<MapViewPage> {
           });
 
           _rode_side_markers.forEach((element) {
-            if (element.markerId == null) {
-              _markers.add(element);
-            }
+           // if (element.markerId == null) {
+
+
+              setState(() {
+                 _markers.add(element);
+              });
+             
+           // }
           });
 
           _home_assist_markers.forEach((element) {
@@ -254,7 +261,11 @@ class _MapViewPageState extends State<MapViewPage> {
 
   loadMarker() {
     setState(() {
-      _markers.clear();
+      try {
+        _markers.clear();
+      } catch (err) {
+        print(err);
+      }
     });
     for (int i = 0; i < widget.requestList.requestList.length; i++) {
       if (tempIndex == i) {

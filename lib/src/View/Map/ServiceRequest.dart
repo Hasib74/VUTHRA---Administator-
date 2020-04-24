@@ -1,15 +1,16 @@
+import 'dart:math';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:vutha_admin_app/src/View/Map/MapViewPage.dart';
 import 'package:vutha_admin_app/src/Model/Request.dart';
 import 'package:vutha_admin_app/src/Utils/Common.dart';
 
-import 'package:geocoder/geocoder.dart';
-
-
-import 'package:vutha_admin_app/src/Controller/NotificationController/NotificationController.dart' as notification_controller;
+import 'package:vutha_admin_app/src/Controller/NotificationController/NotificationController.dart'
+    as notification_controller;
 
 class ServiceRequest extends StatefulWidget {
   @override
@@ -82,8 +83,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                     child: Text(
                       "No Request Avilable !!!",
                       style: TextStyle(
-                          color: Colors.orange,
-                          fontWeight: FontWeight.w800),
+                          color: Colors.orange, fontWeight: FontWeight.w800),
                     ),
                   ),
                 );
@@ -132,7 +132,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
       //print("Key   ${key}");
       //print("Valuee ${value}");
 
-      if (value["serviceBelongsto"] == null) {
+      if (value["status"] != "processing") {
         _requestList.add(new Request(
           phoneNummbe: key,
           request_type: value["request_type"],
@@ -211,7 +211,6 @@ class _ServiceRequestState extends State<ServiceRequest> {
           },
           itemBuilder: (context, int index) {
             return Container(
-
                 width: width / 1.2,
                 decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.6),
@@ -267,7 +266,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                     "Phone Number : ${requestList.requestList[index].phoneNummbe}"),
                               ),
                               FutureBuilder(
-                                  future: getUserLocation(
+                                  future: Common.getUserLocation(
                                       requestList
                                           .requestList[index].userlocation.lat,
                                       requestList
@@ -276,8 +275,9 @@ class _ServiceRequestState extends State<ServiceRequest> {
                                     if (data.data == null) {
                                       return Container();
                                     } else {
-                                      return Flexible(child:  Text("Address : ${data.data} ")
-                                        ,);
+                                      return Flexible(
+                                        child: Text("Address : ${data.data} "),
+                                      );
                                     }
                                   })
                             ],
@@ -289,15 +289,6 @@ class _ServiceRequestState extends State<ServiceRequest> {
         ),
       ),
     );
-  }
-
-  getUserLocation(lat, lan) async {
-    final coordinates = new Coordinates(lat, lan);
-    var addresses =
-        await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    var first = addresses.first;
-
-    return '${first.addressLine}   ';
   }
 
   serviceManDialog() {
@@ -327,11 +318,13 @@ class _ServiceRequestState extends State<ServiceRequest> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text("Location :"),
+                      Text("Location : "),
                       FutureBuilder(
-                          future:
-                              getUserLocation(serviceMan_lat, serviceMan_lan),
+                          future: Common.getUserLocation(
+                              serviceMan_lat, serviceMan_lan),
                           builder: (context, data) {
+                            print("Location   iss   ${serviceMan_lan}");
+
                             if (data.data == null) {
                               return Container();
                             } else {
@@ -345,34 +338,7 @@ class _ServiceRequestState extends State<ServiceRequest> {
                     ],
                   ),
                   Padding(padding: EdgeInsets.all(4)),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      onTap: () {
-                        _serveRequest();
-                      },
-                      child: Container(
-                        height: 30,
-                        decoration: BoxDecoration(
-                            color: Colors.orange,
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black12,
-                                  spreadRadius: 1,
-                                  blurRadius: 1)
-                            ]),
-                        child: Center(
-                          child: Text(
-                            "   Requested To Serve   ",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  Button_Serviceequest(),
                   Padding(padding: EdgeInsets.all(0)),
                 ],
               ),
@@ -387,6 +353,52 @@ class _ServiceRequestState extends State<ServiceRequest> {
                   },
                   child: new Icon(Icons.close)))
         ],
+      ),
+    );
+  }
+
+  StreamBuilder<Event> Button_Serviceequest() {
+    return StreamBuilder(
+        stream: FirebaseDatabase.instance
+            .reference()
+            .child(Common.Serviceman)
+            .child(serviceMan_phoneNumber)
+            .child("active")
+            .onValue,
+        builder: (context, snapshot) {
+          var status = snapshot.data;
+
+          if (status != null && status.snapshot.value == true) {
+          
+            return Requested_To_Service_button();
+          } else {
+            return BusyButtonWithCall();
+          }
+        });
+  }
+
+  Padding Requested_To_Service_button() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+        onTap: () {
+          _serveRequest();
+        },
+        child: Container(
+          height: 30,
+          decoration: BoxDecoration(color: Colors.orange, boxShadow: [
+            BoxShadow(color: Colors.black12, spreadRadius: 1, blurRadius: 1)
+          ]),
+          child: Center(
+            child: Text(
+              "   Requested To Serve   ",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -416,15 +428,14 @@ class _ServiceRequestState extends State<ServiceRequest> {
   }
 
   void _serveRequest() {
+    print(
+        "User Number iss   ${this.requestList.requestList[this.page_position].phoneNummbe}");
 
-
-    print("User Number iss   ${this.requestList.requestList[this.page_position].phoneNummbe}");
-
-    notification_controller.sendNotificationToServiceMan("New request from admin", this.serviceMan_phoneNumber);
-    notification_controller.sendNotificationToUser("Service Accepted", this.requestList.requestList[this.page_position].phoneNummbe);
-
-
-
+    notification_controller.sendNotificationToServiceMan(
+        "New request from admin", this.serviceMan_phoneNumber);
+    /* notification_controller.sendNotificationToUser("Service Accepted",
+                       this.requestList.requestList[this.page_position].phoneNummbe);
+               */
     FirebaseDatabase.instance
         .reference()
         .child(Common.Serve)
@@ -444,15 +455,43 @@ class _ServiceRequestState extends State<ServiceRequest> {
           .reference()
           .child(Common.HelpRequest)
           .child(this.requestList.requestList[this.page_position].phoneNummbe)
-          .set({
-        "serviceBelongsto": this.serviceMan_phoneNumber,
+          .update({
+        "status": "processing"
+        /*"serviceBelongsto": this.serviceMan_phoneNumber,*/
       });
-
-
-
-
 
       removeServiceManDialog();
     });
   }
+
+  BusyButtonWithCall() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+        onTap: () {
+
+               callToServiceMan();
+
+         // _serveRequest();
+        },
+        child: Container(
+          height: 30,
+          decoration: BoxDecoration(color: Colors.orange, boxShadow: [
+            BoxShadow(color: Colors.black12, spreadRadius: 1, blurRadius: 1)
+          ]),
+          child: Center(
+            child: Text(
+              "   Service Man Is Busy   ",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  callToServiceMan() => callToServiceMan();
 }
