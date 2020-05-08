@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:vutha_admin_app/src/Provider/NewUser/UserProvider.dart';
 import 'package:vutha_admin_app/src/View/Home/HomePage.dart';
-
 
 void main() => runApp(MyApp());
 
@@ -19,7 +20,8 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: ChangeNotifierProvider<UserProvider>(
+          create: (_) => UserProvider(), child: MaterialApp(home : HomePage())),
     );
   }
 }

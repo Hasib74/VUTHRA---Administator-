@@ -1,20 +1,10 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vutha_admin_app/src/Provider/NewUser/UserProvider.dart';
 import 'package:vutha_admin_app/src/Utils/CustomDesign.dart';
 import 'package:vutha_admin_app/src/View/Chat/ChatList.dart';
+import 'package:vutha_admin_app/src/View/Home/Users/NewUser.dart';
 import 'package:vutha_admin_app/src/View/Map/ServiceRequest.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'dart:math';
-import 'package:path_provider/path_provider.dart';
-import 'package:rxdart/subjects.dart';
-
-import 'package:vutha_admin_app/src/View/Map/MapViewPage.dart';
-
 import 'package:vutha_admin_app/src/Controller/NotificationController/NotificationController.dart'
     as notification_controller;
 import 'package:vutha_admin_app/src/Routes/Routs.dart' as routes;
@@ -25,13 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  /* FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      new FlutterLocalNotificationsPlugin();
-
-  final BehaviorSubject<String> selectNotificationSubject =
-      BehaviorSubject<String>();*/
-
   @override
   void initState() {
     // TODO: implement initState
@@ -51,6 +34,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<UserProvider>(context);
+
     return MaterialApp(
       home: SafeArea(
         child: Scaffold(
@@ -85,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              _cards(),
+              _cards(provider),
             ],
           ),
         ),
@@ -93,7 +78,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _cards() {
+  _cards(provider) {
     return Align(
         alignment: Alignment.center,
         child: SingleChildScrollView(
@@ -109,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       width: 14,
                     ),
-                    _new_user(),
+                    _new_user(provider),
                   ],
                 ),
               ),
@@ -181,36 +166,61 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _new_user() {
+  _new_user(UserProvider provider) {
+    //print("Provider Valueee ${provider.userList}");
+
     return Expanded(
       flex: 1,
-      child: Container(
-        height: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          boxShadow: [
-            BoxShadow(color: Colors.black12, spreadRadius: 1.5, blurRadius: 1.5)
-          ],
-          color: Colors.white,
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(
-                Icons.recent_actors,
-                color: Colors.orange,
-                size: 100,
+      child: InkWell(
+        onTap: () {
+          routes.normalRoute(context, new NewUser());
+        },
+        child: Stack(
+          children: [
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black12, spreadRadius: 1.5, blurRadius: 1.5)
+                ],
+                color: Colors.white,
               ),
-              Text(
-                "New User",
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.recent_actors,
+                      color: Colors.orange,
+                      size: 100,
+                    ),
+                    Text(
+                      "New User",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              top: 10,
+              right: 10,
+              child: Text(
+                provider.userRequestList == null
+                    ? ""
+                    : "${provider.userRequestList.length}",
                 style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w500),
+                    color: Colors.orange,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 17),
               ),
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );

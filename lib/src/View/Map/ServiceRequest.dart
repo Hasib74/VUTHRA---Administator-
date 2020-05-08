@@ -369,7 +369,6 @@ class _ServiceRequestState extends State<ServiceRequest> {
           var status = snapshot.data;
 
           if (status != null && status.snapshot.value == true) {
-          
             return Requested_To_Service_button();
           } else {
             return BusyButtonWithCall();
@@ -469,10 +468,9 @@ class _ServiceRequestState extends State<ServiceRequest> {
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
+          callToServiceMan();
 
-               callToServiceMan();
-
-         // _serveRequest();
+          // _serveRequest();
         },
         child: Container(
           height: 30,

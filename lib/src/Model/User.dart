@@ -1,17 +1,21 @@
-
 import 'package:flutter/cupertino.dart';
 
 class User {
-
-  var  email;
+  var email;
   var name;
   var service;
+
 //  Location location;
   var number;
   var time;
+  var dob;
 
-  User({this.number,this.email/*,this.location*/,this.name, @required this.time });
-
+  User(
+      {this.number,
+      this.email /*,this.location*/,
+      this.name,
+      this.time,
+      this.dob});
 }
 
 /*

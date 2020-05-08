@@ -173,10 +173,10 @@ class _MapViewPageState extends State<MapViewPage> {
 
           _security_markers.forEach((element) {
             setState(() {
-              if (element != null) {
+            //  if (element != null) {
                 print("Security icons adds  == ${_security_markers.length}");
                 _markers.add(element);
-              }
+              //}
             });
           });
 
@@ -239,14 +239,13 @@ class _MapViewPageState extends State<MapViewPage> {
           });
 
           _rode_side_markers.forEach((element) {
-           // if (element.markerId == null) {
+            // if (element.markerId == null) {
 
+            setState(() {
+              _markers.add(element);
+            });
 
-              setState(() {
-                 _markers.add(element);
-              });
-             
-           // }
+            // }
           });
 
           _home_assist_markers.forEach((element) {
