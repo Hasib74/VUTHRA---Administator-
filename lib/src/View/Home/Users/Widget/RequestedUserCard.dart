@@ -110,7 +110,11 @@ class RequestedUserListCard extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () {
-                      provider.accept(user.number).then((value) {
+                      provider.accept(user.number,user.email).then((value) {
+
+
+                        print("Email ==>  accept  ${value}");
+
                         if (value) {
                           return;
                         } else {

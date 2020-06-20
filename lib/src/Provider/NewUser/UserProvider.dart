@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:vutha_admin_app/src/Model/User.dart';
 import 'package:vutha_admin_app/src/Utils/Common.dart';
-import 'package:sms/sms.dart';
+import 'package:vutha_admin_app/src/sendSms.dart';
 
 //import 'package:flutter_sms/flutter_sms.dart';
 
@@ -95,7 +95,7 @@ class UserProvider extends ChangeNotifier {
         print("Key   ${key}");
         print("Value  ${value}");
 
-        if (value["genarated_code"] != null) {
+        if (value["master_code"] != null) {
           print("Email   ${value["Email"]}");
 
           _userList.add(new User(
@@ -111,32 +111,28 @@ class UserProvider extends ChangeNotifier {
         new Duration(milliseconds: 300), (List) => _userList);
   }
 
-  Future<bool> accept(number) async {
+  Future<bool> accept(number, email) async {
     bool status = false;
 
     String code = RandomDigits.getInteger(6).toString();
 
-    SmsSender sender = new SmsSender();
+    sendMasterCode(number, code, email).then((value) async {
 
-    sender
-        .sendSms(new SmsMessage(number, ' Master Code : ${code}'))
-        .then((value) async {
-      print("SMS VALUE  ${value.body}");
+      print("Email ==>  ${value}");
 
-      if (value.isRead) {
-        status = true;
+      if (value) {
         await FirebaseDatabase.instance
             .reference()
             .child(Common.User)
             .child(number)
             .update({
-          "genarated_code": code,
+          "master_code": code,
+        }).then((value) {
+          status = true;
         });
       } else {
         status = false;
       }
-    }).catchError((err) {
-      status = false;
     });
 
     return status;
