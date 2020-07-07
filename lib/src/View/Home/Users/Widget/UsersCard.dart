@@ -5,13 +5,11 @@ import 'package:vutha_admin_app/src/Model/User.dart';
 import 'package:vutha_admin_app/src/Provider/NewUser/UserProvider.dart';
 import 'package:vutha_admin_app/src/View/Home/Users/Widget/Users.dart';
 
-typedef LoadingCallBack = Function(bool);
 
-class RequestedUserListCard extends StatelessWidget {
+class UsersCard extends StatelessWidget {
   User user;
-  LoadingCallBack loadingCallBack;
 
-  RequestedUserListCard({this.user, this.loadingCallBack});
+  UsersCard({this.user,});
 
   @override
   Widget build(BuildContext context) {
@@ -102,84 +100,9 @@ class RequestedUserListCard extends StatelessWidget {
                 Text("User Name   : "),
                 Text(" ${user.name}")
               ],),*/
-
-              Divider(
-                height: 2,
-                color: Colors.black45,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      loadingCallBack(true);
-                      provider.accept(user.number, user.email).then((value) {
-                        print("Email ==>  accept  ${value}");
-
-                        loadingCallBack(false);
-
-                        if (value) {
-                          return;
-                        } else {
-                          displayDialog(context);
-                        }
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 0.0),
-                      child: Text(
-                        "Accept",
-                        style: TextStyle(
-                          color: Colors.green,
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 2,
-                    height: 30,
-                    color: Colors.black26,
-                  ),
-                  InkWell(
-                    onTap: () => provider.decline(user.number),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 0.0),
-                      child: Text(
-                        "Decline",
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              )
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  void displayDialog(context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => new CupertinoAlertDialog(
-        title: new Text("Failed To Accept"),
-        content: new Text("Check your mobile balance"),
-        actions: [
-          CupertinoDialogAction(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              isDefaultAction: true,
-              child: new Text("Close"))
-        ],
       ),
     );
   }

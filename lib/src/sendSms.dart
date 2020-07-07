@@ -1,9 +1,34 @@
 import 'package:mailer/mailer.dart';
 import 'package:http/http.dart' as http;
 import 'package:mailer/smtp_server/gmail.dart';
+import 'package:vutha_admin_app/src/Utils/Common.dart';
 
 Future<bool> sendMasterCode(number, code, email) async {
   bool status = false;
+
+  Map body = {
+    "userEmail": "hasibakon6174@gmail.com",
+    "userPassword": "hasibakonjoy",
+    "friendEmail": "${email}",
+    "subject": "Master Code",
+    "body": "Master Code :${code}"
+  };
+
+  await http.post(Common.email_url, body: body).then((value) {
+    print("Body value  ${value.body}");
+
+    if (value.statusCode == 200) {
+      status = true;
+    } else {
+      status = false;
+    }
+  });
+
+  print("The status  ${status}");
+
+  return status;
+
+/*  bool status = false;
   String username = 'hasibakon6174@gmail.com';
   String password = 'haibakonjoy';
 
@@ -33,5 +58,5 @@ Future<bool> sendMasterCode(number, code, email) async {
     status = false;
   });
 
-  return status;
+  return status;*/
 }

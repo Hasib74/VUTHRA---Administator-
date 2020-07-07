@@ -66,7 +66,7 @@ class UserProvider extends ChangeNotifier {
         print("Key   ${key}");
         print("Value  ${value}");
 
-        if (value["genarated_code"] == null) {
+        if (value["master_code"] == null) {
           print("Email   ${value["Email"]}");
 
           _userList.add(new User(
@@ -112,12 +112,11 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<bool> accept(number, email) async {
-    bool status = false;
+    bool status;
 
     String code = RandomDigits.getInteger(6).toString();
 
-    sendMasterCode(number, code, email).then((value) async {
-
+    await sendMasterCode(number, code, email).then((value) async {
       print("Email ==>  ${value}");
 
       if (value) {
@@ -136,6 +135,14 @@ class UserProvider extends ChangeNotifier {
     });
 
     return status;
+  }
+
+  decline(number) async {
+    await FirebaseDatabase.instance
+        .reference()
+        .child(Common.User)
+        .child(number)
+        .remove();
   }
 }
 

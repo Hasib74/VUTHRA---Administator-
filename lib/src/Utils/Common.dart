@@ -14,6 +14,8 @@ class Common{
 
   static var TOKEN= "Token";
 
+  static var email_url="https://hsmailapi.herokuapp.com/email";
+
 
   static Future<String> getUserLocation(lat, lan) async {
     final coordinates = new Coordinates(lat, lan);
