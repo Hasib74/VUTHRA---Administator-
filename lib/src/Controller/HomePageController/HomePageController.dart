@@ -1,15 +1,18 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:vutha_admin_app/src/Utils/Common.dart';
 
-class HomePageController extends ControllerMVC {
-  factory HomePageController() {
-    if (_this == null) _this = HomePageController();
-    return _this;
+class HomePageController {
+  
+  HomePageController(){
+    
   }
-
-  static HomePageController _this;
-
-
-
-
-
+  
+  
+  suspendAccount(user_number){
+    
+    FirebaseDatabase.instance.reference().child(Common.User).child(user_number).child("master_code").remove();
+    
+  }
+  
 }
