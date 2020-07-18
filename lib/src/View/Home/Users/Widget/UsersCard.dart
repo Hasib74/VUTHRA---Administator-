@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vutha_admin_app/src/Controller/HomePageController/HomePageController.dart';
+import 'package:vutha_admin_app/src/Controller/HomePageController/UserController.dart';
 import 'package:vutha_admin_app/src/Model/User.dart';
 import 'package:vutha_admin_app/src/Provider/NewUser/UserProvider.dart';
 import 'package:vutha_admin_app/src/View/Home/Users/Widget/Users.dart';
@@ -13,7 +13,7 @@ class UsersCard extends StatelessWidget {
     this.user,
   });
 
-  HomePageController homePageController = new HomePageController();
+  UserController userController = new UserController();
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +117,7 @@ class UsersCard extends StatelessWidget {
   Widget _offsetPopup(User user) {
     return PopupMenuButton<int>(
       onSelected: (value) => {
-        if (value == 1) {homePageController.suspendAccount(user.number)}
+        if (value == 1) {userController.suspendAccount(user.number)}
       },
       itemBuilder: (context) => [
         PopupMenuItem(
